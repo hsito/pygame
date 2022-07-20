@@ -1,5 +1,6 @@
-import sys
 import pygame
+import sys
+
 from raindrop import Rain
 
 
@@ -12,17 +13,14 @@ class Raindrop:
 
         # rain
         self.rain_drops = pygame.sprite.Group()
-
         self._create_raindrops()
         # self._check_raindrops_edges()
 
     def let_it_rain(self):
-
+        #this is the loop that runs the game
         while True:
-
             self._check_events()
-            self.rain_drops.update()
-            self._check_raindrops_edges()
+            self._update_raindrops()
 
             self._update_screen()
 
@@ -30,10 +28,17 @@ class Raindrop:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                self._check_keydown_events(event)
+    def _check_keydown_events(self, event):
+        """Respond to keypresses"""
+        if event.key == pygame.K_q:
+            sys.exit()
 
     def _update_screen(self):
-        self.screen.fill((230, 230, 230))
+        self.screen.fill((255, 255, 255))
         self.rain_drops.draw(self.screen)
+
         pygame.display.flip()
 
     def _create_raindrops(self):
@@ -58,19 +63,24 @@ class Raindrop:
 
         rain = Rain(self)
         rain_width, rain_height = rain.rect.size
-        rain.x = rain_width*2  * rain_number
+        rain.x = rain_width * 2 * rain_number
         rain.y = rain_height + 2 * rain_height * row_number
         rain.rect.x = rain.x
         rain.rect.y = rain.y
         self.rain_drops.add(rain)
 
-    def _check_raindrops_edges(self):
+    def _update_raindrops(self):
         """respond if raindrop falls below screen"""
+        self.rain_drops.update()
+
+        need_new_rain = False
         for rain in self.rain_drops.copy():
             if rain._check_edges():
-                self.rain_drops.remove(rain)
-                self._create_single_row()
+                print('hi')
+                need_new_rain = True
                 break;
+        if need_new_rain == True:
+            self.rain.reset_drop()
 
     def _create_single_row(self):
 

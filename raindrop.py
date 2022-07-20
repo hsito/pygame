@@ -20,7 +20,7 @@ class Rain(Sprite):
 
     def update(self):
         """Make it rain!!!"""
-        self.y += 1
+        self.y += .5
         self.rect.y = self.y
 
     def _check_edges(self):
@@ -29,6 +29,10 @@ class Rain(Sprite):
         if self.rect.top > self.screen.get_rect().bottom:
 
             print('rain out')
-            return True
+            self.reset_drop()
         else:
             return False
+
+    def reset_drop(self):
+        self.rect.y = self.rect.height
+        self.y = float(self.rect.y)
